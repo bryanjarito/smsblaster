@@ -6,6 +6,7 @@ INSTALLATION
 4. Open notepad and paste this one.
     
 cd C:\Program Files\Google\Chrome\Application
+
 chrome.exe C:\Users\<YOUR PC NAME>\Desktop\smsblaster\index.html --user-data-dir="C:\data" --disable-web-security
       
 5. Save as smsblaster.bat (not smsblaster.txt)
