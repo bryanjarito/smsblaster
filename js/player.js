@@ -220,16 +220,13 @@ function completeFn()
 				if(xhr.responseText.error == null) {
 					var err = xhr.responseText	
 				} else {
-					var err = xhr.responseText.error
+					var err = JSON.parse(xhr.responseText).error
 				}
 				row = '<tr class=""><td>' + index +'</td><td>' + element[0] +'</td><td>' + element[1] +
 				'</td><td><span class="text-danger font-weight-bold">' + err + '</span></td><td><button class="btn btn-outline-primary resend" data-number="' +
 				element[1] + '" data-msg="' + element[2] + '"><i class="far fa-paper-plane"></i> Resend</button></td></tr>'
-				row1 = '<tr><td>' + index +'</td><td>' + element[0] +'</td><td>' + element[1] +'</td><td><span class="text-info">' +
-				'Successfully sent</span></td><td>' + datetime + '</td></tr>'
 				
 				$('.table tbody').append(row)
-				$('.table tbody').append(row1)
 				index++
 			});
 		}
@@ -275,7 +272,8 @@ $(document).on('click', '.resend' , function() {
 		resend.closest('td').prev().html('<span class="text-info">Successfully sent</span>')
 		resend.closest('td').html(datetime)
 	}).fail(function (xhr, status) {
-		resend.closest('td').prev().html('<span class="text-danger font-weight-bold">' + xhr.responseText.error + '</span>')
-		alert(xhr.responseText.error)
+		resend.closest('td').prev().html('<span class="text-danger font-weight-bold">' + JSON.parse(xhr.responseText).error + '</span>')
+		console.log(JSON.parse(xhr.responseText).error)
+		alert(JSON.parse(xhr.responseText).error)
 	});
 })
