@@ -18,8 +18,10 @@ $(function()
 		var files = $('#files')[0].files;
 		if (files.length == 0) {
 			alert('Please select a file!')
+		} else if ($('.radiomsg:checked').val() == 'create' && $('#msg').val() == '') {
+			alert('Please create a message first.')
 		} else {
-
+			$('.table tbody').html('')
 			var config = buildConfig();
 
 			// NOTE: Chunk size does not get reset if changed and then set back to empty/default value
@@ -34,17 +36,17 @@ $(function()
 
 			if (files.length > 0)
 			{
-				if (!$('#stream').prop('checked') && !$('#chunk').prop('checked'))
-				{
-					for (var i = 0; i < files.length; i++)
-					{
-						if (files[i].size > 1024 * 1024 * 10)
-						{
-							alert("A file you've selected is larger than 10 MB; please choose to stream or chunk the input to prevent the browser from crashing.");
-							return;
-						}
-					}
-				}
+				// if (!$('#stream').prop('checked') && !$('#chunk').prop('checked'))
+				// {
+				// 	for (var i = 0; i < files.length; i++)
+				// 	{
+				// 		if (files[i].size > 1024 * 1024 * 10)
+				// 		{
+				// 			alert("A file you've selected is larger than 10 MB; please choose to stream or chunk the input to prevent the browser from crashing.");
+				// 			return;
+				// 		}
+				// 	}
+				// }
 
 				start = performance.now();
 
@@ -65,7 +67,7 @@ $(function()
 			{
 				start = performance.now();
 				var results = Papa.parse(txt, config);
-				console.log("Synchronous parse results:", results);
+				// console.log("Synchronous parse results:", results);
 			}
 
 		}
@@ -122,13 +124,13 @@ function stepFn(results, parserHandle)
 
 	if (pauseChecked)
 	{
-		console.log(results, results.data[0]);
+		// console.log(results, results.data[0]);
 		parserHandle.pause();
 		return;
 	}
 
-	if (printStepChecked)
-		console.log(results, results.data[0]);
+	// if (printStepChecked)
+		// console.log(results, results.data[0]);
 }
 
 function chunkFn(results, streamer, file)
@@ -140,12 +142,12 @@ function chunkFn(results, streamer, file)
 
 	parser = streamer;
 
-	if (printStepChecked)
-		console.log("Chunk data:", results.data.length, results);
+	// if (printStepChecked)
+		// console.log("Chunk data:", results.data.length, results);
 
 	if (pauseChecked)
 	{
-		console.log("Pausing; " + results.data.length + " rows in chunk; file:", file);
+		// console.log("Pausing; " + results.data.length + " rows in chunk; file:", file);
 		streamer.pause();
 		return;
 	}
@@ -165,18 +167,27 @@ function completeFn()
 			&& arguments[0].data)
 		rows = arguments[0].data.length;
 
-	console.log("Finished input (async). Time:", end-start, arguments);
+	// console.log("Finished input (async). Time:", end-start, arguments);
 	// console.log("Rows:", rows, "Stepped:", stepped, "Chunks:", chunks);
 
 	$('.table').attr('style','display: inline-table')
 	var index = 1
 	var row = ''
+	var msg = ''
+
+	if ($('.radiomsg:checked').val() == 'create') {
+		msg = $('#msg').val()
+	}
+
 	arguments[0].data.forEach(element => {
-		if (element[0] != '' && element[1] != '' && element[2] != '') {
+		if ($('.radiomsg:checked').val() == 'csv') {
+			msg = element[2]
+		}
+		if (element[0] != '' && element[1] != '') {
 			var form = new FormData();
 			form.append("app_id", "Ld8btyAyoGhRdiEdydcyMXhR9dngtAbo");
 			form.append("app_secret", "92cacb25bd02f1cccf81d42a9e2509d1bc61ed846bd7774eac5dcf63aa12dc9f");
-			form.append("message", element[2]);
+			form.append("message", msg);
 			form.append("address", element[1]);
 			form.append("passphrase", "IYdW2eSthT");
 
@@ -187,7 +198,6 @@ function completeFn()
 			"method": "POST",
 			"headers": {
 				"cache-control": "no-cache",
-				"postman-token": "f2c0b800-acd6-4d7b-c544-47aeb7305760"
 			},
 			"processData": false,
 			"contentType": false,
@@ -204,9 +214,10 @@ function completeFn()
                 + currentdate.getMinutes() + ":" 
                 + currentdate.getSeconds();
 			
-				$('.table tbody').append(row)
 				row = '<tr><td>' + index +'</td><td>' + element[0] +'</td><td>' + element[1] +'</td><td><span class="text-info">' +
 				'Successfully sent</span></td><td>' + datetime + '</td></tr>'
+
+				$('.table tbody').append(row)
 				index++
 			}).fail(function (xhr, status) {
 				var currentdate = new Date(); 
@@ -217,14 +228,14 @@ function completeFn()
                 + currentdate.getMinutes() + ":" 
 				+ currentdate.getSeconds();
 
-				if(xhr.responseText.error == null) {
-					var err = xhr.responseText	
+				if(xhr.responseText == null) {
+					var err = "Error: Internet Disconnected"	
 				} else {
 					var err = JSON.parse(xhr.responseText).error
 				}
 				row = '<tr class=""><td>' + index +'</td><td>' + element[0] +'</td><td>' + element[1] +
 				'</td><td><span class="text-danger font-weight-bold">' + err + '</span></td><td><button class="btn btn-outline-primary resend" data-number="' +
-				element[1] + '" data-msg="' + element[2] + '"><i class="far fa-paper-plane"></i> Resend</button></td></tr>'
+				element[1] + '" data-msg="' + msg + '"><i class="far fa-paper-plane"></i> Resend</button></td></tr>'
 				
 				$('.table tbody').append(row)
 				index++
@@ -232,6 +243,19 @@ function completeFn()
 		}
 	});
 }
+
+$(document).ready(function(){
+
+	$('.radiomsg').change(function() {
+		if ($(this).is(':checked') && $(this).val() == 'create') {
+			$('#msg').show()
+			$('#msg').attr('required')
+		} else {
+			$('#msg').hide()
+			$('#msg').removeAttr('required')
+		}
+	})
+})
 
 $(document).on('click', '.resend' , function() {
 	var resend = $(this);
@@ -252,7 +276,6 @@ $(document).on('click', '.resend' , function() {
 	"method": "POST",
 	"headers": {
 		"cache-control": "no-cache",
-		"postman-token": "f2c0b800-acd6-4d7b-c544-47aeb7305760"
 	},
 	"processData": false,
 	"contentType": false,
@@ -272,8 +295,12 @@ $(document).on('click', '.resend' , function() {
 		resend.closest('td').prev().html('<span class="text-info">Successfully sent</span>')
 		resend.closest('td').html(datetime)
 	}).fail(function (xhr, status) {
-		resend.closest('td').prev().html('<span class="text-danger font-weight-bold">' + JSON.parse(xhr.responseText).error + '</span>')
-		console.log(JSON.parse(xhr.responseText).error)
+		if(xhr.responseText == null) {
+			var err = "Error: Internet Disconnected"	
+		} else {
+			var err = JSON.parse(xhr.responseText).error
+		}
+		resend.closest('td').prev().html('<span class="text-danger font-weight-bold">' + err + '</span>')
 		alert(JSON.parse(xhr.responseText).error)
 	});
 })

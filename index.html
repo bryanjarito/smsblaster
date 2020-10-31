@@ -15,6 +15,27 @@
             <div class="row">
                 <div class="offset-md-3 col-md-6 col-sm-12">
                     <input type="file" id="files" accept=".csv" class="btn btn-secondary btn-block">
+                </div>
+            </div>
+            <div class="row">
+                <div class="offset-md-3 col-md-6 col-sm-12 mt-3">
+                    <div class="form-check">
+                        <input class="form-check-input radiomsg" type="radio" name="radiomsg" id="radiomsg1" value="csv" checked>
+                        <label class="form-check-label" for="radiomsg1">
+                            CSV message
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input radiomsg" type="radio" name="radiomsg" id="radiomsg2" value="create">
+                        <label class="form-check-label" for="radiomsg2">
+                            Create message
+                        </label>
+                    </div>
+                    <textarea id="msg" class="form-control mt-1" style="display: none"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="offset-md-3 col-md-6 col-sm-12">
                     <button id="submit-parse" class="mt-3 btn btn-primary btn-block"><i class="fas fa-paper-plane"></i> SEND SMS</button>
                 </div>
             </div>
