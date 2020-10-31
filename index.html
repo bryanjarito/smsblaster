@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>SMS - Broadcast</title>
+        <meta charset="utf-8">
+        <link rel="icon" href="image/logo.jpg">
+        <link rel="stylesheet" href="css/bootstrap.min.css">
+        <link rel="stylesheet" href="fontawesome/css/all.css">
+	</head>
+	<body>
+        <div class="container">
+            <div class="row">
+                <div class="offset-md-3 col-md-6 col-sm-12"><h3 class="text-center mt-5 mb-4 sm-12">SMS BLASTER</h3></div>
+            </div>
+            <div class="row">
+                <div class="offset-md-3 col-md-6 col-sm-12">
+                    <input type="file" id="files" accept=".csv" class="btn btn-secondary btn-block">
+                    <button id="submit-parse" class="mt-3 btn btn-primary btn-block"><i class="fas fa-paper-plane"></i> SEND SMS</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="offset-md-1 col-md-10 col-sm-12">
+                    <div class="table-responsive-sm mt-5">
+                        <table class="table table-hover table-striped table-sm" style="display: none">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Mobile Number</th>
+                                    <th>Remarks</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/papaparse.min.js"></script>
+    <script src="js/player.js"></script>
+</html>
