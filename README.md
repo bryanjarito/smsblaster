@@ -14,4 +14,4 @@ chrome.exe C:\Users\<YOUR PC NAME>\Desktop\smsblaster\index.html --user-data-dir
 7. Chrome opened with app url already linked
 
 
-Test
+Test1
