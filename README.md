@@ -12,3 +12,6 @@ chrome.exe C:\Users\<YOUR PC NAME>\Desktop\smsblaster\index.html --user-data-dir
 5. Save as smsblaster.bat (not smsblaster.txt) in Desktop
 6. Double click the smsblaster.bat
 7. Chrome opened with app url already linked
+
+
+Test
